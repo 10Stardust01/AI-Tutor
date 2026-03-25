@@ -1,415 +1,247 @@
 <!doctype html>
+
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>AI Tutor - Learn with AI</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-      * {
-        box-sizing: border-box;
-      }
-      body {
-        font-family: 'Inter', sans-serif;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: #333;
-        margin: 0;
-        padding: 0;
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-      .container {
-        max-width: 900px;
-        width: 100%;
-        margin: 20px;
-        background: #fff;
-        border-radius: 20px;
-        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-        padding: 40px;
-        position: relative;
-        overflow: hidden;
-      }
-      .container::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 5px;
-        background: linear-gradient(90deg, #667eea, #764ba2, #f093fb, #f5576c);
-      }
-      h1 {
-        text-align: center;
-        color: #4a5568;
-        margin-bottom: 10px;
-        font-weight: 700;
-        font-size: 2.5rem;
-      }
-      .subtitle {
-        text-align: center;
-        color: #718096;
-        margin-bottom: 40px;
-        font-size: 1.1rem;
-      }
-      .form-group {
-        margin-bottom: 25px;
-      }
-      label {
-        display: block;
-        margin-bottom: 8px;
-        font-weight: 500;
-        color: #4a5568;
-      }
-      input, select {
-        width: 100%;
-        padding: 15px;
-        border: 2px solid #e2e8f0;
-        border-radius: 12px;
-        font-size: 1rem;
-        transition: all 0.3s ease;
-        background: #f8fafc;
-      }
-      input:focus, select:focus {
-        outline: none;
-        border-color: #667eea;
-        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        background: #fff;
-      }
-      .button-group {
-        display: flex;
-        gap: 15px;
-        margin-bottom: 40px;
-        flex-wrap: wrap;
-      }
-      button {
-        flex: 1;
-        min-width: 150px;
-        padding: 15px 20px;
-        border: none;
-        border-radius: 12px;
-        font-size: 1rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        position: relative;
-        overflow: hidden;
-      }
-      button::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-        transition: left 0.5s;
-      }
-      button:hover::before {
-        left: 100%;
-      }
-      #explainBtn {
-        background: linear-gradient(135deg, #667eea, #764ba2);
-        color: white;
-        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-      }
-      #explainBtn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-      }
-      #quizBtn {
-        background: linear-gradient(135deg, #f093fb, #f5576c);
-        color: white;
-        box-shadow: 0 4px 15px rgba(240, 147, 251, 0.3);
-      }
-      #quizBtn:hover:not(:disabled) {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(240, 147, 251, 0.4);
-      }
-      button:disabled {
-        opacity: 0.6;
-        cursor: not-allowed;
-        transform: none;
-      }
-      .output-section {
-        margin-top: 40px;
-      }
-      h2 {
-        color: #4a5568;
-        margin-bottom: 15px;
-        font-weight: 600;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-      }
-      .output-box {
-        background: #f8fafc;
-        border: 2px solid #e2e8f0;
-        border-radius: 12px;
-        padding: 20px;
-        min-height: 100px;
-        transition: all 0.3s ease;
-        position: relative;
-        color: #2d3748;
-        line-height: 1.6;
-      }
 
-      .output-box p {
-        margin: 0 0 1rem;
-        font-size: 1rem;
-      }
-      .output-box h2 {
-        margin: 1rem 0 0.75rem;
-        font-size: 1.3rem;
-        color: #2b6cb0;
-      }
-      .output-box h3 {
-        margin: 1rem 0 0.6rem;
-        font-size: 1.2rem;
-        color: #4a5568;
-      }
-      .output-box h4 {
-        margin: 1rem 0 0.5rem;
-        font-size: 1.1rem;
-        color: #718096;
-        font-weight: 600;
-      }
-      .output-box strong {
-        color: #2a4365;
-        font-weight: 700;
-      }
-      .output-box em {
-        font-style: italic;
-        color: #4a5568;
-      }
-      .output-box ul {
-        margin: 0.5rem 0 1rem 1.3rem;
-      }
-      .output-box li {
-        margin: 0.25rem 0;
-      }
-      .output-box code {
-        background: rgba(66, 153, 225, 0.15);
-        color: #2b6cb0;
-        padding: 2px 6px;
-        border-radius: 6px;
-      }
-      .output-box.loading {
-        background: #f1f5f9;
-        border-color: #cbd5e1;
-      }
-      .spinner {
-        display: inline-block;
-        width: 20px;
-        height: 20px;
-        border: 3px solid #e2e8f0;
-        border-radius: 50%;
-        border-top-color: #667eea;
-        animation: spin 1s ease-in-out infinite;
-        margin-right: 10px;
-      }
-      @keyframes spin {
-        to { transform: rotate(360deg); }
-      }
-      .footer {
-        text-align: center;
-        margin-top: 40px;
-        padding-top: 20px;
-        border-top: 1px solid #e2e8f0;
-        color: #718096;
-        font-size: 0.9rem;
-      }
-      @media (max-width: 768px) {
-        .container {
-          padding: 20px;
-        }
-        h1 {
-          font-size: 2rem;
-        }
-        .button-group {
-          flex-direction: column;
-        }
-        button {
-          min-width: auto;
-        }
-      }
-    </style>
+```
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+  body {
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+  }
+
+  .container {
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 800px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  }
+
+  h1 {
+    text-align: center;
+    margin-bottom: 10px;
+  }
+
+  input, select {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+  }
+
+  .buttons {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  button {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+
+  #explainBtn { background: #667eea; color: white; }
+  #quizBtn { background: #f5576c; color: white; }
+  #memeBtn { background: #48bb78; color: white; }
+
+  .output {
+  background: #f8fafc;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 20px;
+  min-height: 100px;
+
+  line-height: 1.8;        /* ✅ add this */
+  white-space: pre-line;   /* ✅ add this */
+}
+ 
+  .output h2 {
+  color: #667eea;
+  margin-top: 15px;
+  font-size: 1.3rem;
+}
+
+.output h3 {
+  color: #4a5568;
+  margin-top: 10px;
+  font-size: 1.1rem;
+}
+
+.output ul {
+  padding-left: 20px;
+}
+
+.output li {
+  margin-bottom: 6px;
+}
+
+  img {
+    max-width: 100%;
+    border-radius: 10px;
+    margin: 10px 0;
+  }
+</style>
+```
+
   </head>
+
   <body>
     <div class="container">
-      <h1><i class="fas fa-graduation-cap"></i> AI Tutor</h1>
-      <p class="subtitle">Unlock knowledge with AI-powered explanations and quizzes</p>
+      <h1>🎓 AI Tutor</h1>
 
-      <div class="form-group">
-        <label for="topic"><i class="fas fa-search"></i> Topic</label>
-        <input id="topic" placeholder="e.g., Newton's laws, recursion, climate change" />
-      </div>
+```
+  <input id="topic" placeholder="Enter topic..." />
 
-      <div class="form-group">
-        <label for="mode"><i class="fas fa-cogs"></i> Explanation Style</label>
-        <select id="mode">
-          <option value="default">Engineering Student</option>
-          <option value="professor">Professor</option>
-          <option value="friend">Friend</option>
-          <option value="meme">Meme</option>
-        </select>
-      </div>
+  <select id="mode">
+    <option value="default">Student</option>
+    <option value="professor">Professor</option>
+    <option value="friend">Friend</option>
+    <option value="meme">Meme</option>
+  </select>
 
-      <div class="button-group">
-        <button id="explainBtn"><i class="fas fa-lightbulb"></i> Explain</button>
-        <button id="quizBtn" disabled><i class="fas fa-question-circle"></i> Quiz Me</button>
-        <button id="memeBtn" disabled><i class="fas fa-image"></i> Meme It</button>
-      </div>
+  <div class="buttons">
+    <button id="explainBtn">Explain</button>
+    <button id="quizBtn" disabled>Quiz</button>
+    <button id="memeBtn" disabled>Meme</button>
+  </div>
 
-      <div class="output-section">
-        <h2><i class="fas fa-book-open"></i> Explanation</h2>
-        <div class="output-box" id="explanation">-- Enter a topic and click Explain --</div>
-      </div>
+  <div class="output" id="explanation">Explanation will appear here</div>
+  <div class="output" id="quiz">Quiz will appear here</div>
+  <div class="output" id="meme">Meme will appear here</div>
+</div>
 
-      <div class="output-section">
-        <h2><i class="fas fa-brain"></i> Quiz</h2>
-        <div class="output-box" id="quiz">-- Take the quiz after getting an explanation --</div>
-      </div>
+<script>
+  const explainBtn = document.getElementById("explainBtn");
+  const quizBtn = document.getElementById("quizBtn");
+  const memeBtn = document.getElementById("memeBtn");
 
-      <div class="output-section">
-        <h2><i class="fas fa-image"></i> Meme</h2>
-        <div class="output-box" id="meme">-- Your meme will appear here after using Meme It --</div>
-      </div>
+  const explanationEl = document.getElementById("explanation");
+  const quizEl = document.getElementById("quiz");
+  const memeEl = document.getElementById("meme");
 
-    </div>
+  async function post(url, data) {
+    const controller = new AbortController();
+    const timeoutHandle = setTimeout(() => controller.abort(), 10000);
 
-    <script>
-      const explainBtn = document.getElementById("explainBtn");
-      const quizBtn = document.getElementById("quizBtn");
-      const memeBtn = document.getElementById("memeBtn");
-      const explanationEl = document.getElementById("explanation");
-      const quizEl = document.getElementById("quiz");
-      const memeEl = document.getElementById("meme");
-
-      async function postJson(url, data) {
-        const res = await fetch(url, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data)
-        });
-        if (!res.ok) {
-          const err = await res.json().catch(() => ({ error: res.statusText }));
-          throw new Error(err.error || `HTTP ${res.status}`);
-        }
-        return res.json();
-      }
-
-      function escapeHTML(text) {
-        const div = document.createElement('div');
-        div.textContent = text;
-        return div.innerHTML;
-      }
-
-      function formatExplanationText(rawText) {
-        // Basic markdown-style formatting and paragraph blocks
-        let safeText = escapeHTML(rawText);
-
-        safeText = safeText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-        safeText = safeText.replace(/\*(.*?)\*/g, '<em>$1</em>');
-        safeText = safeText.replace(/^###\s*(.*)$/gm, '<h4>$1</h4>');
-        safeText = safeText.replace(/^##\s*(.*)$/gm, '<h3>$1</h3>');
-        safeText = safeText.replace(/^#\s*(.*)$/gm, '<h2>$1</h2>');
-        safeText = safeText.replace(/^\s*[-*] \s*(.*)$/gm, '<li>$1</li>');
-        safeText = safeText.replace(/\n{2,}/g, '</p><p>');
-        safeText = `<p>${safeText}</p>`;
-        safeText = safeText.replace(/<p><\/p>/g, '');
-        safeText = safeText.replace(/(<li>.*?<\/li>)+/gs, match => `<ul>${match}</ul>`);
-        safeText = safeText.replace(/<p>(<ul>.*?<\/ul>)<\/p>/gs, '$1');
-
-        return safeText;
-      }
-
-      explainBtn.addEventListener("click", async () => {
-        const topic = document.getElementById("topic").value.trim();
-        const mode = document.getElementById("mode").value;
-
-        if (!topic) {
-          alert("Please enter a topic first.");
-          return;
-        }
-
-        explanationEl.classList.add("loading");
-        explanationEl.innerHTML = '<div class="spinner"></div>Generating explanation...';
-        quizEl.innerHTML = '-- Take the quiz after getting an explanation --';
-        quizBtn.disabled = true;
-        explainBtn.disabled = true;
-
-        try {
-          const { text } = await postJson("/explain", { topic, mode });
-          explanationEl.classList.remove("loading");
-          explanationEl.innerHTML = formatExplanationText(text);
-          quizBtn.disabled = false;
-          memeBtn.disabled = false;
-        } catch (e) {
-          explanationEl.classList.remove("loading");
-          explanationEl.textContent = "Error: " + e.message;
-        } finally {
-          explainBtn.disabled = false;
-        }
+    try {
+      const res = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+        signal: controller.signal
       });
 
-      quizBtn.addEventListener("click", async () => {
-        const topic = document.getElementById("topic").value.trim();
-        if (!topic) {
-          alert("Please enter a topic first.");
-          return;
-        }
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(`HTTP ${res.status}: ${text}`);
+      }
 
-        quizEl.classList.add("loading");
-        quizEl.innerHTML = '<div class="spinner"></div>Generating quiz...';
-        quizBtn.disabled = true;
+      return await res.json();
+    } catch (err) {
+      throw new Error(err.name === 'AbortError' ? 'Request timed out (10s)' : err.message);
+    } finally {
+      clearTimeout(timeoutHandle);
+    }
+  }
 
-        try {
-          const { quiz } = await postJson("/quiz", { topic });
-          quizEl.classList.remove("loading");
-          quizEl.textContent = quiz.replace(/\*\*/g, "").replace(/\*/g, "");
-        } catch (e) {
-          quizEl.classList.remove("loading");
-          quizEl.textContent = "Error: " + e.message;
-        } finally {
-          quizBtn.disabled = false;
-        }
-      });
+  function formatExplanation(text) {
+  let t = text;
 
-      memeBtn.addEventListener("click", async () => {
-        const topic = document.getElementById("topic").value.trim();
-        const mode = document.getElementById("mode").value;
+  // bold
+  t = t.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
 
-        if (!topic) {
-          alert("Please enter a topic first.");
-          return;
-        }
+  // headings (====)
+  t = t.replace(/^(.*?)\n=+/gm, '<h2>$1</h2>');
 
-        memeEl.classList.add("loading");
-        memeEl.innerHTML = '<div class="spinner"></div>Generating meme...';
-        memeBtn.disabled = true;
+  // subheadings (----)
+  t = t.replace(/^(.*?)\n-+/gm, '<h3>$1</h3>');
 
-        try {
-          const payload = await postJson("/meme", { topic, mode });
-          memeEl.classList.remove("loading");
+  // numbered lists
+  t = t.replace(/^\d+\.\s+(.*)$/gm, '<li>$1</li>');
+  t = t.replace(/(<li>.*<\/li>)/gs, '<ul>$1</ul>');
 
-          let html = `<p><strong>Meme caption:</strong> ${payload.caption}</p>`;
-          if (payload.image) {
-            html += `<img src="${payload.image}" alt="Generated meme" style="max-width:100%; border-radius:12px; border:1px solid #e2e8f0; margin-top: 10px;"/>`;
-          } else {
-            html += `<p style="color:#4a5568;">Image generation was unavailable; please check your API provider key and logs.</p>`;
-          }
+  // paragraphs
+  t = t.replace(/\n{2,}/g, '</p><p>');
+  t = `<p>${t}</p>`;
 
-          memeEl.innerHTML = html;
-        } catch (e) {
-          memeEl.classList.remove("loading");
-          memeEl.textContent = "Error: " + e.message;
-        } finally {
-          memeBtn.disabled = false;
-        }
-      });
-    </script>
+  // clean empty
+  t = t.replace(/<p><\/p>/g, '');
+
+  return t;
+}
+
+  explainBtn.onclick = async () => {
+    const topic = document.getElementById("topic").value;
+    const mode = document.getElementById("mode").value;
+
+    explanationEl.innerText = "Loading...";
+    const data = await post("/explain", { topic, mode });
+
+    explanationEl.innerHTML = formatExplanation(data.text);
+    quizBtn.disabled = false;
+    memeBtn.disabled = false;
+  };
+
+  quizBtn.onclick = async () => {
+    const topic = document.getElementById("topic").value;
+
+    quizEl.innerText = "Loading...";
+    const data = await post("/quiz", { topic });
+
+    quizEl.innerText = data.quiz;
+  };
+
+  memeBtn.onclick = async () => {
+    const topic = document.getElementById("topic").value;
+
+    memeEl.innerHTML = "Loading...";
+
+    let data;
+    try {
+      data = await post("/meme", { topic });
+    } catch (err) {
+      data = { error: err.message || 'Failed to fetch meme' };
+    }
+
+    if (data.error && !data.image) {
+      const fallback = await post("/meme2", { topic });
+      data = { ...fallback, error: data.error };
+    }
+
+    if (data.image) {
+      memeEl.innerHTML = `
+        <div style="text-align:center">
+          <p style="font-size:1.05rem; margin: 6px 0;"><b>${data.top}</b></p>
+          <img src="${data.image}" alt="Generated meme" />
+          <p style="font-size:1.05rem; margin: 6px 0;"><b>${data.bottom}</b></p>
+          ${data.error ? `<p style="color:#e53e3e;">Fallback used: ${data.error}</p>` : ""}
+          ${data.captionError ? `<p style="color:#d69e2e;">Caption fallback: ${data.captionError}</p>` : ""}
+        </div>
+      `;
+    } else {
+      memeEl.innerText = `Meme failed: ${data.error || 'no image URL returned'}`;
+    }
+  };
+</script>
+```
+
   </body>
 </html>
